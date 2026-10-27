@@ -1,81 +1,180 @@
+
 import { useState } from "react";
 import "./Post.css";
 
 function Post() {
   const [postType, setPostType] = useState("Question");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [abstract, setAbstract] = useState("");
+  const [articleText, setArticleText] = useState("");
+  const [tags, setTags] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handlePost = async (event) => {
+    event.preventDefault();
+
+    if (!title.trim() || !tags.trim()) {
+      alert("Please enter a title and tags");
+      return;
+    }
+
+    if (postType === "Question" && !description.trim()) {
+      alert("Please describe your question");
+      return;
+    }
+
+    if (
+      postType === "Article" &&
+      (!abstract.trim() || !articleText.trim())
+    ) {
+      alert("Please complete your article");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    const savedUser = localStorage.getItem("user");
+
+    if (!token || !savedUser) {
+      alert("Please log in before creating a post");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:3000/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body: JSON.stringify({
+          type: postType,
+          title: title,
+          description: description,
+          abstract: abstract,
+          articleText: articleText,
+          tags: tags.split(",").map((tag) => tag.trim()).filter(Boolean)
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message || "Could not save the post");
+        return;
+      }
+
+      alert("Post saved successfully!");
+
+      setTitle("");
+      setDescription("");
+      setAbstract("");
+      setArticleText("");
+      setTags("");
+    } catch (error) {
+      alert("Could not connect to the backend");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="post-container">
-      <h2 className = "heading" > New Post </h2>
+      <h2 className="heading">New Post</h2>
 
-      <div className = "post" >
+      <div className="post">
         <span>Select Post Type:</span>
 
         <label>
-          <input type="radio" name="postType" value="Question" checked={postType === "Question"} onChange={(event) => setPostType(event.target.value)} />
+          <input
+            type="radio"
+            name="postType"
+            value="Question"
+            checked={postType === "Question"}
+            onChange={(event) => setPostType(event.target.value)}
+          />
           Question
         </label>
 
         <label>
-          <input type="radio" name="postType" value="Article" checked={postType === "Article"} onChange={(event) => setPostType(event.target.value)} />
+          <input
+            type="radio"
+            name="postType"
+            value="Article"
+            checked={postType === "Article"}
+            onChange={(event) => setPostType(event.target.value)}
+          />
           Article
         </label>
       </div>
 
-      {postType === "Question" && (
-        <div>
-          <h2>Question Form</h2>
-          <h3> What do you want to ask or share?</h3>
+      <form onSubmit={handlePost}>
+        <h2>
+          {postType === "Question" ? "Question Form" : "Article Form"}
+        </h2>
 
-          <label style = {{ minHeight: "35px" }}>
-            Title:
-            <textarea placeholder=" Start your question with how, what, why, etc. " />
-          </label>
-<br></br>
-           <label>
+        <h3>What do you want to ask or share?</h3>
+
+        <label>
+          Title:
+          <textarea
+            placeholder="Enter a title"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            required
+          />
+        </label>
+
+        {postType === "Question" ? (
+          <label>
             Describe your problem:
-            <textarea />
+            <textarea
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+              required
+            />
           </label>
-<br></br>
-          <label style = {{minHeight: "40px"}}>
-            Tags:
-            <textarea placeholder="Please add up to 3 tags to describe what your question is about e.g., java " />
-          </label>
-<br></br>
-           <button> Post</button>
-        </div>
-      )}
+        ) : (
+          <>
+            <label>
+              Abstract:
+              <textarea
+                placeholder="Write a short summary"
+                value={abstract}
+                onChange={(event) => setAbstract(event.target.value)}
+                required
+              />
+            </label>
 
-      {postType === "Article"  && (
-        <div>
-          <h2>Article Form</h2>
-          <h3> What do you want to ask or share?:</h3>
-          
-          <label style = {{minHeight: "35px"}}>
-            Title:
-            <textarea placeholder="Enter a descriptive title" />
-          </label>
-<br></br>
-           <label style = {{minHeight: "70px"}}>
-            Abstract:
-            <textarea placeholder = "Enter a 1-paragraph abstract" />
-          </label>
-<br></br>
-          <label style = {{minHeight: "70px"}}>
-            Article Text:
-            <textarea placeholder = "Enter a 1-paragraph abstract" />
-          </label>
-<br></br>
-          
-          <label style = {{minHeight: "40px"}}>
-            Tags:
-            <textarea placeholder="Please add up to 3 tags to describe what your question is about e.g., java " />
-          </label>
-<br></br>
+            <label>
+              Article Text:
+              <textarea
+                placeholder="Write your article here"
+                value={articleText}
+                onChange={(event) => setArticleText(event.target.value)}
+                required
+              />
+            </label>
+          </>
+        )}
 
-          <button> Post</button>
-        </div>
-      )}
+        <label>
+          Tags:
+          <textarea
+            placeholder="Add up to 3 tags, separated by commas"
+            value={tags}
+            onChange={(event) => setTags(event.target.value)}
+            required
+          />
+        </label>
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Saving..." : "Post"}
+        </button>
+      </form>
     </div>
   );
 }

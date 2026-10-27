@@ -234,6 +234,78 @@ app.post("/upgrade", verifyToken, async (req, res) => {
 });
 
 
+app.post("/posts", verifyToken, async (req, res) => {
+    try {
+        const { type, title, description, abstract, articleText, tags } = req.body;
+
+        if (!title || !title.trim() || !Array.isArray(tags)) {
+            return res.status(400).json({
+                message: "Please enter a title and tags"
+            });
+        }
+
+        if (!["Question", "Article"].includes(type)) {
+            return res.status(400).json({
+                message: "Choose a valid post type"
+            });
+        }
+
+        if (tags.length > 3 || tags.some((tag) => typeof tag !== "string" || !tag.trim())) {
+            return res.status(400).json({
+                message: "Please enter up to 3 valid tags"
+            });
+        }
+
+        if (type === "Question" && (!description || !description.trim())) {
+            return res.status(400).json({
+                message: "Please describe your question"
+            });
+        }
+
+        if (type === "Article" && (!abstract || !abstract.trim() || !articleText || !articleText.trim())) {
+            return res.status(400).json({
+                message: "Please complete the article"
+            });
+        }
+
+        const userDoc = await db.collection("users").doc(req.userId).get();
+
+        if (!userDoc.exists) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        const user = userDoc.data();
+
+        const newPost = {
+            type: type,
+            title: title.trim(),
+            description: type === "Question" ? description.trim() : "",
+            abstract: type === "Article" ? abstract.trim() : "",
+            articleText: type === "Article" ? articleText.trim() : "",
+            tags: tags.map((tag) => tag.trim()),
+            author: user.name,
+            authorId: req.userId,
+            createdAt: new Date().toISOString()
+        };
+
+        const post = await db.collection("posts").add(newPost);
+
+        res.status(201).json({
+            message: "Post saved successfully",
+            postId: post.id
+        });
+    } catch (error) {
+        console.log(error);
+
+        res.status(500).json({
+            message: "Could not save the post"
+        });
+    }
+});
+
+
 // Newsletter subscription
 app.post("/subscribe", async (req, res) => {
     try {
