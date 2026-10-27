@@ -17,6 +17,7 @@ import Signup from "./route/Signup";
  
 import Post from "./route/post";
 import Subscribe from "./Subscribe";
+import Pricing from "./Pricing";
 function Home() {
   return (
     <>
@@ -42,6 +43,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/post" element={<Post />} />
+        <Route path="/pricing" element={<Pricing />} />
       </Routes>
 
       <Footer />

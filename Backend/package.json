@@ -12,9 +12,12 @@
   "type": "commonjs",
   "dependencies": {
     "@sendgrid/mail": "^8.1.6",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "firebase-admin": "^14.5.0",
+    "jsonwebtoken": "^9.0.3",
     "resend": "^6.24.0"
   }
 }

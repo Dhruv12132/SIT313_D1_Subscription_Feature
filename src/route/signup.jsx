@@ -1,8 +1,5 @@
 
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "./firebase.js";
 import { useNavigate } from "react-router-dom";
 import "./Signup.css";
 
@@ -14,7 +11,7 @@ function Signup() {
 
     const navigate = useNavigate();
 
-    const handleSignUp = (e) => {
+    const handleSignUp = async (e) => {
         e.preventDefault();
 
         if (password !== confirmPassword) {
@@ -22,23 +19,33 @@ function Signup() {
             return;
         }
 
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-
-                // Save user details in Firestore
-                return setDoc(doc(db, "users", user.uid), {
+        try {
+            const response = await fetch("http://localhost:3000/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
                     name: username,
-                    email: email
-                });
-            })
-            .then(() => {
-                alert("Signup successful");
-                navigate("/login");
-            })
-            .catch((error) => {
-                alert(error.message);
+                    email: email,
+                    password: password
+                })
             });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.message);
+                return;
+            }
+
+            alert("Signup successful");
+            navigate("/login");
+
+        } catch (error) {
+            alert("Could not connect to the server");
+            console.log(error);
+        }
     };
 
     return (
@@ -47,19 +54,39 @@ function Signup() {
 
             <form onSubmit={handleSignUp}>
                 <label>Name</label>
-                <input placeholder="Enter Full Name" type="text" value={username} onChange={(e) => setusername(e.target.value)} required
+                <input
+                    placeholder="Enter Full Name"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setusername(e.target.value)}
+                    required
                 />
 
                 <label>Email</label>
-                <input type="email" placeholder="Enter Email" value={email} onChange={(e) => setEmail(e.target.value)} required
+                <input
+                    type="email"
+                    placeholder="Enter Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
                 />
 
                 <label>Password</label>
-                <input type="password" placeholder="Enter Password" value={password} onChange={(e) => setPassword(e.target.value)} required
+                <input
+                    type="password"
+                    placeholder="Enter Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
                 />
 
                 <label>Confirm Password</label>
-                <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required
+                <input
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
                 />
 
                 <button className="signup-button" type="submit">

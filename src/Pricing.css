@@ -1,0 +1,339 @@
+
+/* Main pricing page */
+.pricing-container {
+  padding: 55px 24px 65px;
+  text-align: center;
+  background: linear-gradient(180deg, #f5f8ff 0%, #ffffff 100%);
+  min-height: 480px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  color: #172033;
+}
+
+.pricing-container h1 {
+  font-size: 36px;
+  font-weight: 750;
+  letter-spacing: -1px;
+  margin: 0 0 14px;
+  color: #172554;
+}
+
+.pricing-container > p {
+  font-size: 16px;
+  color: #64748b;
+  line-height: 1.7;
+  margin: 0 auto;
+}
+
+/* Plan cards */
+.pricing-plans {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 28px;
+  margin: 42px auto 15px;
+  flex-wrap: wrap;
+  max-width: 850px;
+}
+
+.pricing-card {
+  width: 350px;
+  max-width: 100%;
+  padding: 32px 28px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 8px 25px rgba(30, 64, 175, 0.07);
+  box-sizing: border-box;
+  text-align: left;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pricing-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(30, 64, 175, 0.12);
+}
+
+.pricing-card h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 18px;
+  text-align: left;
+}
+
+.pricing-card h3 {
+  font-size: 30px;
+  font-weight: 750;
+  letter-spacing: -0.7px;
+  color: #1d4ed8;
+  margin: 0 0 15px;
+  text-align: left;
+}
+
+.pricing-card p {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.pricing-card ul {
+  padding-left: 20px;
+  margin: 20px 0 28px;
+  line-height: 2.2;
+  color: #334155;
+  font-size: 14px;
+  min-height: 100px;
+}
+
+.pricing-card li {
+  padding-left: 3px;
+}
+
+/* Plan buttons */
+.pricing-card button {
+  width: 100%;
+  padding: 14px 18px;
+  border: none;
+  border-radius: 9px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.pricing-card button:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.pricing-card button:focus-visible,
+.payment-modal button:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+.pricing-card button:disabled {
+  background: #e2e8f0;
+  color: #475569;
+  cursor: not-allowed;
+}
+
+/* Payment popup background */
+.payment-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.68);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 1000;
+  animation: overlayAppear 0.2s ease;
+}
+
+/* Payment popup */
+.payment-modal {
+  background: #ffffff;
+  color: #172033;
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 32px;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.22);
+  box-sizing: border-box;
+  animation: modalAppear 0.25s ease;
+}
+
+.payment-modal h2 {
+  color: #172554;
+  font-size: 27px;
+  font-weight: 750;
+  letter-spacing: -0.5px;
+  margin: 0 0 10px;
+}
+
+.payment-modal p {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0 0 24px;
+}
+
+.payment-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.payment-modal label {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 5px;
+}
+
+.payment-modal input {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  background: #f8fafc;
+  color: #172033;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.payment-modal input::placeholder {
+  color: #94a3b8;
+}
+
+.payment-modal input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  background: #ffffff;
+}
+
+/* Popup buttons */
+.payment-modal button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.payment-modal button[type="submit"] {
+  margin-top: 14px;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.payment-modal button[type="submit"]:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.payment-modal button[type="button"] {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.payment-modal button[type="button"]:hover {
+  background: #e2e8f0;
+}
+
+.payment-modal button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Popup animations */
+@keyframes overlayAppear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Mobile layout */
+@media (max-width: 600px) {
+  .pricing-container {
+    padding: 38px 16px 45px;
+  }
+
+  .pricing-container h1 {
+    font-size: 29px;
+  }
+
+  .pricing-plans {
+    gap: 20px;
+    margin-top: 30px;
+  }
+
+  .pricing-card {
+    width: 100%;
+    padding: 25px 22px;
+  }
+
+  .payment-modal {
+    padding: 25px 20px;
+    border-radius: 16px;
+  }
+
+  .payment-modal h2 {
+    font-size: 24px;
+  }
+}
+
+/* Respect reduced-motion settings */
+@media (prefers-reduced-motion: reduce) {
+  .pricing-card,
+  .pricing-card button,
+  .payment-modal input {
+    transition: none;
+  }
+
+  .payment-overlay,
+  .payment-modal {
+    animation: none;
+  }
+}
+
+.payment-modal {
+  position: relative;
+}
+
+.payment-modal .close-modal {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #64748b;
+  border: none;
+  border-radius: 50%;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.payment-modal .close-modal:hover {
+  background: #f1f5f9;
+  color: #172033;
+}
